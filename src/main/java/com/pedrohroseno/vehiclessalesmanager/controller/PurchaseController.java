@@ -7,6 +7,7 @@ import com.pedrohroseno.vehiclessalesmanager.model.Vehicle;
 import com.pedrohroseno.vehiclessalesmanager.repository.CustomerRepository;
 import com.pedrohroseno.vehiclessalesmanager.repository.PurchaseRepository;
 import com.pedrohroseno.vehiclessalesmanager.repository.VehicleRepository;
+import com.pedrohroseno.vehiclessalesmanager.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,85 +19,41 @@ import java.util.List;
 @RequestMapping("/purchases")
 public class PurchaseController {
 
-    @Autowired
-    private PurchaseRepository purchaseRepository;
+    private final PurchaseService purchaseService;
 
     @Autowired
-    private VehicleRepository vehicleRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    // Create a new purchase
-    @PostMapping("")
-    public ResponseEntity<?> createPurchase(@RequestBody Purchase purchase) {
-        try {
-            Vehicle vehicle = vehicleRepository.findById(purchase.getVehicle().getLicensePlate())
-                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id " + purchase.getVehicle().getLicensePlate()));
-            Customer customer = customerRepository.findById(purchase.getCustomer().getCpf())
-                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found with CPF " + purchase.getCustomer().getCpf()));
-
-            purchase.setVehicle(vehicle);
-            purchase.setCustomer(customer);
-
-            Purchase newPurchase = purchaseRepository.save(purchase);
-            return new ResponseEntity<>(newPurchase, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public PurchaseController(PurchaseService purchaseService) {
+        this.purchaseService = purchaseService;
     }
 
-    // Retrieve all purchases
-    @GetMapping("")
-    public ResponseEntity<?> getAllPurchases() {
-        List<Purchase> purchases = purchaseRepository.findAll();
-        return new ResponseEntity<>(purchases, HttpStatus.OK);
+    // GET all purchases
+    @GetMapping
+    public List<Purchase> getAllPurchases() {
+        return purchaseService.getAllPurchases();
     }
 
-    // Retrieve a purchase by id
+    // GET purchase by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPurchaseById(@PathVariable Long id) {
-        Purchase purchase = purchaseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Purchase not found with id " + id));
-        return new ResponseEntity<>(purchase, HttpStatus.OK);
+    public Purchase getPurchaseById(@PathVariable Long id) {
+        return purchaseService.getPurchaseById(id);
     }
 
-    // Update a purchase
+    // POST a new purchase
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Purchase addPurchase(@RequestBody Purchase purchase) {
+        return purchaseService.createPurchase(purchase);
+    }
+
+    // PUT an updated purchase
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePurchase(@PathVariable Long id, @RequestBody Purchase purchaseDetails) {
-        try {
-            Purchase purchase = purchaseRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Purchase not found with id " + id));
-
-            Vehicle vehicle = vehicleRepository.findById(purchaseDetails.getVehicle().getLicensePlate())
-                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id " + purchaseDetails.getVehicle().getLicensePlate()));
-            Customer customer = customerRepository.findById(purchaseDetails.getCustomer().getCpf())
-                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found with CPF " + purchaseDetails.getCustomer().getCpf()));
-
-            purchase.setVehicle(vehicle);
-            purchase.setCustomer(customer);
-            purchase.setPurchasePrice(purchaseDetails.getPurchasePrice());
-            purchase.setPurchaseDate(purchaseDetails.getPurchaseDate());
-
-            Purchase updatedPurchase = purchaseRepository.save(purchase);
-            return new ResponseEntity<>(updatedPurchase, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public Purchase updatePurchase(@PathVariable Long id, @RequestBody Purchase purchase) {
+        return purchaseService.updatePurchase(id, purchase);
     }
 
-    // Delete a purchase
+    // DELETE a purchase
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePurchase(@PathVariable Long id) {
-        try {
-            Purchase purchase = purchaseRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Purchase not found with id " + id));
-
-            purchaseRepository.delete(purchase);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void deletePurchase(@PathVariable Long id) {
+        purchaseService.deletePurchase(id);
     }
-
 }

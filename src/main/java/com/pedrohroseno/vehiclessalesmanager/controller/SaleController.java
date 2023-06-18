@@ -26,7 +26,7 @@ public class SaleController {
 
     @PostMapping("/")
     public void addSale(@RequestBody Sale sale) {
-        saleService.addSale(sale);
+        saleService.createSale(sale);
     }
 
     @PutMapping("/{id}")

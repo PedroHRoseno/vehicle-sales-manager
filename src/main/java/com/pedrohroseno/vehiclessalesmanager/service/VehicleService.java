@@ -4,6 +4,7 @@ import com.pedrohroseno.vehiclessalesmanager.exceptions.InvalidVehicleBrandExcep
 import com.pedrohroseno.vehiclessalesmanager.model.Vehicle;
 import com.pedrohroseno.vehiclessalesmanager.model.enums.VehicleBrand;
 import com.pedrohroseno.vehiclessalesmanager.repository.VehicleRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,13 @@ public class VehicleService {
         return vehicleRepository.findById(licensePlate).orElse(null);
     }
 
-    public Vehicle addVehicle(Vehicle vehicle) {
+    public void addVehicle(Vehicle vehicle) {
         // Check if the brand is valid
         if (!EnumSet.allOf(VehicleBrand.class).contains(vehicle.getBrand())) {
             throw new InvalidVehicleBrandException("Invalid vehicle brand: " + vehicle.getBrand());
         }
 
-        return vehicleRepository.save(vehicle);
+        vehicleRepository.save(vehicle);
     }
 
 
@@ -38,7 +39,24 @@ public class VehicleService {
         vehicleRepository.save(vehicle);
     }
 
-    public void deleteVehicleByLicensePlate(String licensePlate) {
-        vehicleRepository.deleteById(licensePlate);
+    @Transactional
+    public void deleteVehicle(String licensePlate) {
+        vehicleRepository.deleteVehicleByLicensePlate(licensePlate);
     }
+
+    public void setVehicleStock(Vehicle vehicle, Boolean status){
+        vehicle.setInStock(status);
+        this.updateVehicle(vehicle);
+    }
+
+    public boolean vehicleExistsByLicensePlate(String licensePlate){
+        Vehicle vehicle = getVehicleByLicensePlate(licensePlate);
+        return vehicle != null;
+    }
+
+    public boolean vehicleIsAvailable(String licensePlate){
+        Vehicle vehicle = getVehicleByLicensePlate(licensePlate);
+        return vehicle.getInStock();
+    }
+
 }

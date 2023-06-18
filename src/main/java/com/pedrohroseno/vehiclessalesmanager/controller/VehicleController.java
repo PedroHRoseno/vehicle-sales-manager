@@ -1,19 +1,13 @@
 package com.pedrohroseno.vehiclessalesmanager.controller;
 
 import com.pedrohroseno.vehiclessalesmanager.model.Vehicle;
-import com.pedrohroseno.vehiclessalesmanager.repository.VehicleRepository;
 import com.pedrohroseno.vehiclessalesmanager.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -27,29 +21,36 @@ public class VehicleController {
         return vehicleService.getAllVehicles();
     }
 
-    @GetMapping("/{licensePlate}")
-    public Vehicle getVehicleByLicensePlate(@PathVariable String licensePlate) {
-        return vehicleService.getVehicleByLicensePlate(licensePlate);
+    @GetMapping("/search")
+    public ResponseEntity<Vehicle> getVehicle(@RequestParam("licensePlate") final String licensePlate) {
+        Vehicle vehicleByLicensePlate = vehicleService.getVehicleByLicensePlate(licensePlate);
+        if (vehicleByLicensePlate != null){
+            return ResponseEntity.ok(vehicleByLicensePlate);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/")
-    public void addVehicle(@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Void> addVehicle(@RequestBody Vehicle vehicle) {
         vehicleService.addVehicle(vehicle);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{licensePlate}")
-    public void updateVehicle(@PathVariable String licensePlate, @RequestBody Vehicle vehicle) {
-        Vehicle existingVehicle = vehicleService.getVehicleByLicensePlate(licensePlate);
+    @PutMapping("/")
+    public ResponseEntity<Void> updateVehicle(@RequestBody final Vehicle vehicle) {
+        Vehicle existingVehicle = vehicleService.getVehicleByLicensePlate(vehicle.getLicensePlate());
         if (existingVehicle != null) {
-            vehicle.setLicensePlate(licensePlate);
+            vehicle.setLicensePlate(vehicle.getLicensePlate());
             vehicleService.updateVehicle(vehicle);
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @DeleteMapping("/{licensePlate}")
-    public void deleteVehicleByLicensePlate(@PathVariable String licensePlate) {
-        vehicleService.deleteVehicleByLicensePlate(licensePlate);
+    public ResponseEntity<Void> deleteVehicle(@PathVariable final String licensePlate) {
+        vehicleService.deleteVehicle(licensePlate);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
 

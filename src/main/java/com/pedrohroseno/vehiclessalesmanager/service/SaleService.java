@@ -7,6 +7,7 @@ import com.pedrohroseno.vehiclessalesmanager.repository.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +31,13 @@ public class SaleService {
         return saleRepository.findById(id).orElse(null);
     }
 
-    public void addSale(Sale sale) {
-        Optional<Vehicle> vehicle = Optional.ofNullable(vehicleService.getVehicleByLicensePlate(sale.getVehicle().getLicensePlate()));
+    public void createSale(Sale sale) {
+        Vehicle vehicle = sale.getVehicle();
         Optional<Customer> customer = Optional.ofNullable(customerService.getCustomerByCpf(sale.getCustomer().getCpf()));
-        if (vehicle.isPresent() && customer.isPresent()){
+        if (vehicleService.vehicleExistsByLicensePlate(vehicle.getLicensePlate()) && customer.isPresent() && vehicleService.vehicleIsAvailable(vehicle.getLicensePlate())){
+            sale.setSaleDate(new Date());
             saleRepository.save(sale);
+            vehicleService.setVehicleStock(vehicle, false);
         }
     }
 
