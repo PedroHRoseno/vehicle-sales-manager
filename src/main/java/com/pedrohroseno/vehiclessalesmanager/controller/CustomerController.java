@@ -3,6 +3,8 @@ package com.pedrohroseno.vehiclessalesmanager.controller;
 import com.pedrohroseno.vehiclessalesmanager.model.Customer;
 import com.pedrohroseno.vehiclessalesmanager.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +21,19 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("/{cpf}")
-    public Customer getCustomerByCpf(@PathVariable String cpf) {
-        return customerService.getCustomerByCpf(cpf);
+    @GetMapping("/search")
+    public ResponseEntity<Customer> getCustomer(@RequestParam("cpf")final String cpf) {
+        Customer customer = customerService.getCustomerByCpf(cpf);
+        if(customer != null){
+            return ResponseEntity.ok(customer);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/")
-    public void addCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Void> addCustomer(@RequestBody Customer customer) {
         customerService.addCustomer(customer);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{cpf}")
@@ -39,7 +46,8 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{cpf}")
-    public void deleteCustomerByCpf(@PathVariable String cpf) {
+    public ResponseEntity<Void> deleteCustomerByCpf(@PathVariable String cpf) {
         customerService.deleteCustomerByCpf(cpf);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

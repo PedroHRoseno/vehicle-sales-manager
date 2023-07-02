@@ -33,9 +33,13 @@ public class PurchaseController {
     }
 
     // GET purchase by ID
-    @GetMapping("/{id}")
-    public Purchase getPurchaseById(@PathVariable Long id) {
-        return purchaseService.getPurchaseById(id);
+    @GetMapping("/search")
+    public ResponseEntity<Purchase> getPurchaseById(@RequestParam Long id) {
+        Purchase purchase = purchaseService.getPurchaseById(id);
+        if(purchase != null){
+            return ResponseEntity.ok(purchase);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     // POST a new purchase
@@ -53,6 +57,7 @@ public class PurchaseController {
 
     // DELETE a purchase
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePurchase(@PathVariable Long id) {
         purchaseService.deletePurchase(id);
     }

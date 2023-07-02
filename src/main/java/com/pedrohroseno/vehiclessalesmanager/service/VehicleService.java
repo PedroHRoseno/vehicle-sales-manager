@@ -55,8 +55,13 @@ public class VehicleService {
     }
 
     public boolean vehicleIsAvailable(String licensePlate){
-        Vehicle vehicle = getVehicleByLicensePlate(licensePlate);
-        return vehicle.getInStock();
+        if (vehicleExistsByLicensePlate(licensePlate)){
+            Vehicle vehicle = getVehicleByLicensePlate(licensePlate);
+            return vehicle.getInStock();
+        }
+        else {
+            return false;
+        }
     }
 
 }
