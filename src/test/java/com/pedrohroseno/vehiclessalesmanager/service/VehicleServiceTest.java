@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -27,9 +26,6 @@ public class VehicleServiceTest {
 
     @InjectMocks
     private VehicleService vehicleService;
-
-    public VehicleServiceTest() {
-    }
 
     @Test
     public void testGetAllVehicles() {

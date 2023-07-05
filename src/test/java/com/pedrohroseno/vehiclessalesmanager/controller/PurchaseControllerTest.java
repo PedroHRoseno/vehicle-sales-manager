@@ -18,6 +18,7 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PurchaseControllerTest {
 
+    //Prestar atenção em qual anotação de mock utilizar @MockBean para quando estiver utilizando springboottest e @Mock para o Junit isolado.
     @MockBean
     PurchaseService purchaseService;
 

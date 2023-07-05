@@ -3,6 +3,8 @@ package com.pedrohroseno.vehiclessalesmanager.controller;
 import com.pedrohroseno.vehiclessalesmanager.model.Sale;
 import com.pedrohroseno.vehiclessalesmanager.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,19 +16,20 @@ public class SaleController {
     @Autowired
     private SaleService saleService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<Sale> getAllSales() {
         return saleService.getAllSales();
     }
 
-    @GetMapping("/{id}")
-    public Sale getSaleById(@PathVariable Long id) {
+    @GetMapping("/search")
+    public Sale getSaleById(@RequestParam Long id) {
         return saleService.getSaleById(id);
     }
 
-    @PostMapping("/")
-    public void addSale(@RequestBody Sale sale) {
+    @PostMapping
+    public ResponseEntity<Void> addSale(@RequestBody Sale sale) {
         saleService.createSale(sale);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")
@@ -39,8 +42,9 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSaleById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSaleById(@PathVariable Long id) {
         saleService.deleteSaleById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
