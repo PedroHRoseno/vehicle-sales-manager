@@ -1,13 +1,19 @@
 package com.pedrohroseno.vehiclessalesmanager.controller;
 
+import com.pedrohroseno.vehiclessalesmanager.model.dtos.CustomerOwnedVehiclesDTO;
 import com.pedrohroseno.vehiclessalesmanager.model.Sale;
+import com.pedrohroseno.vehiclessalesmanager.model.dtos.SaleBrandDTO;
+import com.pedrohroseno.vehiclessalesmanager.model.enums.VehicleBrand;
 import com.pedrohroseno.vehiclessalesmanager.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sales")
@@ -24,6 +30,22 @@ public class SaleController {
     @GetMapping("/search")
     public Sale getSaleById(@RequestParam Long id) {
         return saleService.getSaleById(id);
+    }
+
+    @GetMapping("/vehicles")
+    public List<CustomerOwnedVehiclesDTO> getCustomerVehicles(@RequestParam("cpf")final String cpf) {
+        return saleService.getCustomerVehicles(cpf);
+    }
+
+    @GetMapping("/salesPerBrand")
+    public List<SaleBrandDTO> getCustomerVehicles() {
+        return saleService.getSalesPerBrand();
+    }
+
+    @GetMapping("/profit")
+    public double getTotalProfit(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                 @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        return saleService.getTotalProfit(startDate, endDate);
     }
 
     @PostMapping

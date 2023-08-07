@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.thymeleaf:thymeleaf:3.1.2.RELEASE")
     implementation("junit:junit:4.13.1")
     implementation("junit:junit:4.13.1")
     compileOnly("org.projectlombok:lombok")
