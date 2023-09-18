@@ -1,6 +1,7 @@
 package com.pedrohroseno.vehiclessalesmanager.controller;
 
 import com.pedrohroseno.vehiclessalesmanager.model.Customer;
+import com.pedrohroseno.vehiclessalesmanager.model.ViaCepResponse;
 import com.pedrohroseno.vehiclessalesmanager.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

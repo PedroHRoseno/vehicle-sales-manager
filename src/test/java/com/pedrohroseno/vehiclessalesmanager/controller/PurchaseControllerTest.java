@@ -1,5 +1,6 @@
 package com.pedrohroseno.vehiclessalesmanager.controller;
 
+import com.pedrohroseno.vehiclessalesmanager.Utils;
 import com.pedrohroseno.vehiclessalesmanager.model.Purchase;
 import com.pedrohroseno.vehiclessalesmanager.service.PurchaseService;
 import io.restassured.http.ContentType;
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static com.pedrohroseno.vehiclessalesmanager.Utils.buildPurchase;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -82,10 +84,4 @@ public class PurchaseControllerTest {
             .statusCode(204);
     }
 
-    private Purchase buildPurchase(){
-        Purchase purchase = new Purchase();
-        purchase.setPurchaseDate(Date.from(Instant.now()));
-        purchase.setId(1L);
-        return purchase;
-    }
 }

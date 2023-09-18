@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static com.pedrohroseno.vehiclessalesmanager.Utils.buildSale;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -80,13 +81,6 @@ public class SaleControllerTest {
         .then()
             .statusCode(204);
 
-    }
-
-    private Sale buildSale(){
-        Sale sale = new Sale();
-        sale.setId(1L);
-        sale.setSaleDate(Date.from(Instant.now()));
-        return sale;
     }
 
 }

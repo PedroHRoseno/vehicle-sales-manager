@@ -1,5 +1,6 @@
 package com.pedrohroseno.vehiclessalesmanager.controller;
 
+import com.pedrohroseno.vehiclessalesmanager.Utils;
 import com.pedrohroseno.vehiclessalesmanager.controller.VehicleController;
 import com.pedrohroseno.vehiclessalesmanager.model.Vehicle;
 import com.pedrohroseno.vehiclessalesmanager.model.enums.VehicleBrand;
@@ -35,7 +36,7 @@ public class VehicleControllerTest {
     @Test
     public void shouldReturnAllVehicles() throws Exception {
         //Mockando o veiculo
-        Vehicle vehicle = this.buildVehicle();
+        Vehicle vehicle = Utils.buildVehicle();
         //Mockando o retorno do método ou seja quando o método for chamado, eu já defino uma resposta padrao pra esse teste
         Mockito.when(vehicleService.getAllVehicles()).thenReturn(List.of(vehicle));
 
@@ -49,7 +50,7 @@ public class VehicleControllerTest {
 
     @Test
     public void shouldFindOneVehicle() throws Exception {
-        Vehicle vehicle = this.buildVehicle();
+        Vehicle vehicle = Utils.buildVehicle();
         Mockito.when(vehicleService.getVehicleByLicensePlate(vehicle.getLicensePlate())).thenReturn(vehicle);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -62,7 +63,7 @@ public class VehicleControllerTest {
 
     @Test
     public void shouldNotFindOneVehicle() throws Exception {
-        Vehicle vehicle = this.buildVehicle();
+        Vehicle vehicle = Utils.buildVehicle();
         Mockito.when(vehicleService.getVehicleByLicensePlate("DEF5678")).thenReturn(null);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -74,7 +75,7 @@ public class VehicleControllerTest {
 
     @Test
     public void shoulCreateOneVehicle() throws Exception {
-        Vehicle vehicle = this.buildVehicle();
+        Vehicle vehicle = Utils.buildVehicle();
         Mockito.doNothing().when(vehicleService).addVehicle(vehicle);
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -86,7 +87,7 @@ public class VehicleControllerTest {
 
     @Test
     public void shoulDeleteOneVehicle() throws Exception {
-        Vehicle vehicle = this.buildVehicle();
+        Vehicle vehicle = Utils.buildVehicle();
         Mockito.doNothing().when(vehicleService).deleteVehicle("DEF5678");
 
         this.mockMvc.perform(MockMvcRequestBuilders
@@ -94,18 +95,5 @@ public class VehicleControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-    }
-
-    public Vehicle buildVehicle(){
-        Vehicle vehicle = new Vehicle();
-        vehicle.setLicensePlate("ABC1234");
-        vehicle.setBrand(VehicleBrand.FERRARI);
-        vehicle.setModelName("F40");
-        vehicle.setColor("BLUE");
-        vehicle.setModelYear(1989);
-        vehicle.setManufactureYear(1989);
-        vehicle.setKilometersDriven(10000);
-        vehicle.setInStock(true);
-        return vehicle;
     }
 }

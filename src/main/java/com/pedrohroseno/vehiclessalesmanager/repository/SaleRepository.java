@@ -26,6 +26,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT new com.pedrohroseno.vehiclessalesmanager.model.dtos.SaleBrandDTO(v.brand, COUNT(s)) FROM Sale s INNER JOIN s.vehicle v GROUP BY v.brand")
     List<SaleBrandDTO> salesPerBrand();
 
-    @Query("SELECT COUNT(s.salePrice) FROM Sale s WHERE s.saleDate > :startDate AND s.saleDate < :endDate")
+    @Query("SELECT SUM(s.salePrice) FROM Sale s WHERE s.saleDate > :startDate AND s.saleDate < :endDate")
     double profitPerMonth(Date startDate, Date endDate);
 }

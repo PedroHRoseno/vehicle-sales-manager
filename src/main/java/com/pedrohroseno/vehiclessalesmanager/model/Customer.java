@@ -1,7 +1,6 @@
 package com.pedrohroseno.vehiclessalesmanager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -13,9 +12,6 @@ public class Customer {
     private String name;
     private String phoneNumber1;
     private String phoneNumber2;
-    private String streetName;
-    private String number;
-    private String city;
-    private String state;
-    private String reference;
+    @ManyToOne(cascade= CascadeType.PERSIST)
+    private Address address;
 }

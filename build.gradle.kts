@@ -31,6 +31,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.rest-assured:rest-assured:5.3.1")
+    testImplementation ("org.wiremock:wiremock:3.0.1")
+    testImplementation ("org.assertj:assertj-core:3.24.2")
+    testImplementation ("com.h2database:h2:2.1.214")
 }
 
 tasks.withType<Test> {
